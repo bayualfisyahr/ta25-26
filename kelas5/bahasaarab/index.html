@@ -170,7 +170,7 @@
                     <!-- Visual Stage -->
                     <div class="relative w-full h-64 bg-amber-50 rounded-lg border-2 border-dashed border-arab-gold flex items-center justify-center overflow-hidden mb-6">
                         <!-- Reference Object (Table) -->
-                        <div class="absolute text-6xl transition-all duration-500 z-10">🪑</div>
+                        <div class="absolute text-6xl transition-all duration-500 z-10 w-full text-center">🪑</div>
                         <!-- Moving Object (Book) -->
                         <div id="moving-object" class="absolute text-4xl transition-all duration-500 z-20" style="transform: translate(0, -50px);">📕</div>
                     </div>
@@ -221,7 +221,7 @@
 
                 <!-- Theory Card -->
                 <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-arab-accent">
-                    <h3 class="font-bold text-lg mb-4 text-gray-800">💡 Rumus Penting: Baris Kasrah</h3>
+                    <h3 class="font-bold text-lg mb-4 text-gray-800">💡 Rumus/Kaidah: Baris Kasrah</h3>
                     <p class="mb-4">Perhatikan perubahan bunyi akhir kata benda setelah kata posisi.</p>
                     
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
@@ -237,11 +237,35 @@
                         </div>
                     </div>
 
-                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700 mb-4">
                         <li>Kata Benda awalnya berakhiran <strong>"u"</strong> (Dhommah).</li>
                         <li>Setelah didahului kata posisi (seperti <i>fii, 'ala, tahta</i>), akhiran berubah menjadi <strong>"i"</strong> (Kasrah).</li>
                         <li><strong>Tips Hafalan:</strong> Ingat saja, kata posisi suka bikin kata temannya jadi "i".</li>
                     </ul>
+
+                    <!-- New Example Section -->
+                    <div class="mt-4 p-4 bg-red-50 rounded-lg border border-red-100">
+                        <p class="font-bold text-sm text-red-800 mb-2 border-b border-red-200 pb-1">⚠️ Perhatikan Contoh Benar dan Salah:</p>
+                        <div class="grid grid-cols-1 gap-2 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="font-arabic text-lg text-green-700">✅ عَلَى المَكْتَبِ</span>
+                                <span class="text-xs text-gray-500">('Alal Maktabi)</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-arabic text-lg text-red-700">❌ عَلَى المَكْتَبُ</span>
+                                <span class="text-xs text-gray-500">('Alal Maktabu)</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="font-arabic text-lg text-green-700">✅ فِي الفَصْلِ</span>
+                                <span class="text-xs text-gray-500">(Fil Fashli)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-arabic text-lg text-red-700">❌ فِي الفَصْلَ</span>
+                                <span class="text-xs text-gray-500">(Fil Fashla)</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -528,6 +552,7 @@
             const object = document.getElementById('moving-object');
             const arabicText = document.getElementById('posisi-arabic');
             const indoText = document.getElementById('posisi-indo');
+            const refObject = object.parentElement.querySelector('.absolute:first-child');
             
             // Handle Active Button State
             const buttons = document.querySelectorAll('.zharaf-btn');
@@ -561,11 +586,25 @@
 
             if (type === 'fii') {
                 object.textContent = selected.icon;
-                object.parentElement.querySelector('.absolute:first-child').textContent = selected.refIcon;
+                refObject.textContent = selected.refIcon;
+                refObject.style.letterSpacing = 'normal';
                 object.style.transform = 'translate(0, 10px) scale(0.8)';
+            } else if (type === 'baina') {
+                // SPECIAL LOGIC FOR BAINA (2 CHAIRS)
+                object.textContent = '📕';
+                refObject.textContent = '🪑 🪑'; // Two chairs
+                refObject.style.letterSpacing = '20px'; // Add space between chairs
+                
+                let transform = `translate(${selected.x || 0}px, ${selected.y}px)`;
+                if (selected.scale) transform += ` scale(${selected.scale})`;
+                
+                object.style.transform = transform;
+                object.style.zIndex = selected.z;
+                if (selected.opacity) object.style.opacity = selected.opacity;
             } else {
                 object.textContent = '📕';
-                object.parentElement.querySelector('.absolute:first-child').textContent = '🪑';
+                refObject.textContent = '🪑'; // Single chair
+                refObject.style.letterSpacing = 'normal';
                 
                 let transform = `translate(${selected.x || 0}px, ${selected.y}px)`;
                 if (selected.scale) transform += ` scale(${selected.scale})`;
